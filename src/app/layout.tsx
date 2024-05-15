@@ -1,6 +1,8 @@
+import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import './globals.css';
+import { DarkModeProvider } from './darkModeProvider';
+import Navbar from '@/components/Navbar';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -15,8 +17,15 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang='en'>
-			<body className={inter.className}>{children}</body>
+		<html lang='en' suppressHydrationWarning>
+			<body
+				className={`${inter.className} flex flex-col min-h-screen p-4 max-w-screen-xl mx-auto bg-light-100 text-dark-100 dark:bg-dark-100 dark:text-light-100`}
+			>
+				<DarkModeProvider>
+					<Navbar />
+					{children}
+				</DarkModeProvider>
+			</body>
 		</html>
 	);
 }
