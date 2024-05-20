@@ -1,7 +1,8 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import { DarkModeProvider } from './darkModeProvider';
-import Navbar from '@/components/Navbar';
+import Navbar from '@/components/navBar/Navbar';
+import { Toaster } from 'sonner';
 
 export const metadata: Metadata = {
   title: 'Cash Management',
@@ -19,6 +20,7 @@ export default function RootLayout({
         <DarkModeProvider>
           <Navbar />
           {children}
+          <Toaster />
         </DarkModeProvider>
       </body>
     </html>

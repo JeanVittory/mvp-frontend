@@ -9,12 +9,15 @@
 		"lint": "next lint"
 	},
 	"dependencies": {
+		"axios": "^1.7.0",
 		"joi": "^17.13.1",
 		"next": "14.2.3",
 		"next-themes": "^0.3.0",
 		"react": "^18",
 		"react-dom": "^18",
 		"react-icons": "^5.2.1",
+		"react-spinners": "^0.13.8",
+		"sonner": "^1.4.41",
 		"swr": "^2.2.5"
 	},
 	"devDependencies": {

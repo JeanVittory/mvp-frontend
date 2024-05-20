@@ -5,7 +5,10 @@ import { ChangeEvent, FormEvent, useState } from 'react';
 import { IoMdArrowRoundForward } from 'react-icons/io';
 import { authValidator } from '@/utils/validators/auth/joi';
 import { IAuthentication, IAuthenticationErrors } from '@/interfaces/auth';
-import { ValidationError } from 'joi';
+import { authenticate } from './services';
+import { SERVER_ERROR_CODE, UNAUTORIZED_CODE } from '@/constants';
+import { ClipLoader } from 'react-spinners';
+import { showServerErrorToast, showUnauthorizedToast } from '@/utils/toasts';
 
 export default function LoginForm() {
   const [credentials, setCredentials] = useState<IAuthentication>({
@@ -18,6 +21,8 @@ export default function LoginForm() {
     password: '',
   });
 
+  const [isloading, setIsLoading] = useState<boolean>(false);
+
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setCredentials({
@@ -26,26 +31,32 @@ export default function LoginForm() {
     });
   };
 
-  const handleBlur = () => {
+  const handleBlur = (): void => {
     validateLoginForm();
   };
 
-  const handleSumbit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSumbit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const isNotValid = validateLoginForm();
     if (isNotValid) return;
     resetCredentialsState();
-    console.log('TODO FUE BIEN');
+    resetErrorState();
+    setIsLoading(true);
+    const result = await authenticate(credentials);
+    setIsLoading(false);
+    if (result.code === SERVER_ERROR_CODE) return showServerErrorToast();
+    if (result.response.status === UNAUTORIZED_CODE)
+      return showUnauthorizedToast();
   };
 
-  const resetErrorState = () => {
+  const resetErrorState = (): void => {
     setError({
       email: '',
       password: '',
     });
   };
 
-  const resetCredentialsState = () => {
+  const resetCredentialsState = (): void => {
     setCredentials({
       email: '',
       password: '',
@@ -102,10 +113,21 @@ export default function LoginForm() {
         <button
           className={`transition duration-300 flex justify-center gap-2 dark:bg-light-100 bg-dark-100 dark:text-dark-100 text-light-100 font-medium ${urbanist} rounded-xl py-2`}
         >
-          Continue
-          <span className="self-center">
-            <IoMdArrowRoundForward size={12} />
-          </span>
+          {isloading ? (
+            <ClipLoader
+              color={`${localStorage.getItem('theme') === 'light' ? '#ffffff' : '#000000'}`}
+              loading={isloading}
+              size={24}
+              aria-label="Loading Spinner"
+            />
+          ) : (
+            <>
+              Continue
+              <span className="self-center">
+                <IoMdArrowRoundForward size={12} />
+              </span>
+            </>
+          )}
         </button>
       </form>
     </article>

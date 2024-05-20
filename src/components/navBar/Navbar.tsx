@@ -1,4 +1,4 @@
-import ThemeSwitchMode from './ThemeSwitchMode';
+import ThemeSwitchMode from '../darkMode/ThemeSwitchMode';
 
 export default function Navbar() {
   return (
