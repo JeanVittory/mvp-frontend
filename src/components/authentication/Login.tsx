@@ -3,6 +3,7 @@
 import { urbanist } from '@/utils/fonts';
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { IoMdArrowRoundForward } from 'react-icons/io';
+import { VscEye, VscEyeClosed } from 'react-icons/vsc';
 import { authValidator } from '@/utils/validators/auth/joi';
 import { IAuthentication, IAuthenticationErrors } from '@/interfaces/auth';
 import { authenticate } from './services';
@@ -23,30 +24,35 @@ export default function LoginForm() {
 
   const [isloading, setIsLoading] = useState<boolean>(false);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
-    setCredentials({
-      ...credentials,
-      [name]: value,
+    setCredentials((prev) => {
+      const updateCredentials = {
+        ...prev,
+        [name]: value,
+      };
+      validateLoginForm(updateCredentials);
+      return updateCredentials;
     });
   };
 
   const handleBlur = (): void => {
-    validateLoginForm();
+    validateLoginForm(credentials);
   };
 
-  const handleSumbit = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSumbit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
-    const isNotValid = validateLoginForm();
+    const isNotValid = validateLoginForm(credentials);
     if (isNotValid) return;
     resetCredentialsState();
     resetErrorState();
     setIsLoading(true);
     const result = await authenticate(credentials);
     setIsLoading(false);
-    if (result.code === SERVER_ERROR_CODE) return showServerErrorToast();
-    if (result.response.status === UNAUTORIZED_CODE)
-      return showUnauthorizedToast();
+    if (result.code === SERVER_ERROR_CODE) showServerErrorToast();
+    if (result.status === UNAUTORIZED_CODE) showUnauthorizedToast();
   };
 
   const resetErrorState = (): void => {
@@ -63,7 +69,7 @@ export default function LoginForm() {
     });
   };
 
-  const validateLoginForm = () => {
+  const validateLoginForm = (credentials: IAuthentication) => {
     const { error } = authValidator.validate(credentials);
     if (error) {
       const key = error.details[0].context?.label as string;
@@ -74,6 +80,10 @@ export default function LoginForm() {
       return error;
     }
     resetErrorState();
+  };
+
+  const handleShowPassword = (): void => {
+    setShowPassword((prev) => !prev);
   };
 
   return (
@@ -95,15 +105,23 @@ export default function LoginForm() {
           ) : null}
         </div>
         <div>
-          <input
-            type="password"
-            name="password"
-            value={credentials.password}
-            placeholder="Password"
-            className="w-full p-4 rounded-xl  border dark:border-slate-50/20 border-slate-950/20 transition duration-300 hover:dark:border-slate-50/45 hover:border-slate-950/45"
-            onChange={handleChange}
-            onBlur={handleBlur}
-          />
+          <div className="relative">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              name="password"
+              value={credentials.password}
+              placeholder="Password"
+              className="w-full p-4 rounded-xl  border dark:border-slate-50/20 border-slate-950/20 transition duration-300 hover:dark:border-slate-50/45 hover:border-slate-950/45"
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+            <span
+              className="absolute inset-y-0 right-0 flex items-center justify-center px-3 cursor-pointer"
+              onClick={handleShowPassword}
+            >
+              {showPassword ? <VscEye /> : <VscEyeClosed />}
+            </span>
+          </div>
           {error.password ? (
             <p className="text-xs ml-2 mt-1 text-red-700 font-bold">
               {error.password}

@@ -28,11 +28,15 @@ export const authValidator = joi.object({
   password: joi
     .string()
     .required()
+    .min(3)
     .error((errors) => {
       errors.forEach((err) => {
         switch (err.code) {
           case 'string.empty':
             err.message = EMPTY_PASSWORD_MESSAGE;
+            break;
+          case 'string.min':
+            err.message = 'Contrasena muy corta';
             break;
           default:
             break;
