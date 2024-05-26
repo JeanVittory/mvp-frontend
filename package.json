@@ -9,7 +9,15 @@
 		"lint": "next lint"
 	},
 	"dependencies": {
+		"@nextui-org/avatar": "^2.0.27",
+		"@nextui-org/dropdown": "^2.1.23",
+		"@nextui-org/link": "^2.0.29",
+		"@nextui-org/navbar": "^2.0.30",
+		"@nextui-org/switch": "^2.0.28",
+		"@nextui-org/system": "^2.1.2",
+		"@nextui-org/theme": "^2.2.3",
 		"axios": "^1.7.0",
+		"framer-motion": "^11.2.6",
 		"joi": "^17.13.1",
 		"next": "14.2.3",
 		"next-themes": "^0.3.0",
@@ -18,7 +26,8 @@
 		"react-icons": "^5.2.1",
 		"react-spinners": "^0.13.8",
 		"sonner": "^1.4.41",
-		"swr": "^2.2.5"
+		"swr": "^2.2.5",
+		"zustand": "^4.5.2"
 	},
 	"devDependencies": {
 		"@types/node": "^20",

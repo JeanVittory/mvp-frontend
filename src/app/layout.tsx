@@ -1,8 +1,9 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import { DarkModeProvider } from './darkModeProvider';
-import Navbar from '@/components/navBar/Navbar';
 import { Toaster } from 'sonner';
+import NavbarComponent from '@/components/navbar/navbar';
+import { NextUIProvider } from '@nextui-org/system';
 
 export const metadata: Metadata = {
   title: 'Cash Management',
@@ -16,12 +17,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="transition duration-300 flex flex-col min-h-screen px-4 max-w-screen-xl mx-auto bg-light-100 text-dark-100 dark:bg-dark-100 dark:text-light-100">
-        <DarkModeProvider>
-          <Navbar />
-          {children}
-          <Toaster />
-        </DarkModeProvider>
+      <body className="transition duration-300 flex flex-col min-h-screen max-w-screen-xl mx-auto bg-light-100 text-dark-100 dark:bg-dark-100 dark:text-light-100">
+        <NextUIProvider>
+          <DarkModeProvider>
+            {children}
+            <Toaster />
+          </DarkModeProvider>
+        </NextUIProvider>
       </body>
     </html>
   );

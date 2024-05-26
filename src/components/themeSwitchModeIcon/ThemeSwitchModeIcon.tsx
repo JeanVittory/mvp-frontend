@@ -2,10 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { useTheme } from 'next-themes';
-import Image from 'next/image';
 import { FiMoon, FiSun } from 'react-icons/fi';
 
-export default function ThemeSwitchMode() {
+export default function ThemeSwitchModeIcon() {
   const [mounted, setMounted] = useState(false);
   const { setTheme, resolvedTheme } = useTheme();
 
