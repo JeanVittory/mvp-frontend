@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
 import { useTheme } from 'next-themes';
+import { useThemeStore } from '../../store/theme/theme';
 import {
   Navbar,
   NavbarBrand,
@@ -18,13 +18,21 @@ import {
 import { Switch } from '@nextui-org/switch';
 import { Avatar } from '@nextui-org/avatar';
 import { IoSunnyOutline, IoMoonSharp } from 'react-icons/io5';
+import { DARK, LIGHT } from '@/constants';
 
 export default function NavbarComponent() {
   const { setTheme, resolvedTheme } = useTheme();
 
+  const themeStore = useThemeStore(({ theme }) => theme);
+  const changeTheme = useThemeStore(({ changeTheme }) => changeTheme);
+
   const handleTheme = (): void => {
-    if (resolvedTheme === 'dark') return setTheme('light');
-    return setTheme('dark');
+    if (resolvedTheme === DARK) {
+      setTheme(LIGHT);
+      return changeTheme(LIGHT);
+    }
+    setTheme(DARK);
+    return changeTheme(DARK);
   };
 
   return (
@@ -34,17 +42,17 @@ export default function NavbarComponent() {
       </NavbarBrand>
 
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
-        <NavbarItem>
+        <NavbarItem value="cerrar">
           <Link color="foreground" href="#">
             Cerrar
           </Link>
         </NavbarItem>
-        <NavbarItem isActive>
-          <Link href="#" aria-current="page" color="danger">
+        <NavbarItem isActive value="registrar">
+          <Link href="#" aria-current="page" color="primary">
             Registrar
           </Link>
         </NavbarItem>
-        <NavbarItem>
+        <NavbarItem value="balance">
           <Link color="foreground" href="#">
             Balance
           </Link>
@@ -69,17 +77,18 @@ export default function NavbarComponent() {
               key="profile"
               className="h-14 gap-2 cursor-default"
               isReadOnly={true}
+              value="user"
             >
               <p className="font-semibold">Buenas tardes: </p>
               <p className="font-semibold">zoey@example.com</p>
             </DropdownItem>
-            <DropdownItem isReadOnly={true}>
+            <DropdownItem isReadOnly={true} value="theme">
               <Switch
-                defaultSelected
+                defaultSelected={themeStore === DARK}
                 size="sm"
                 onClick={handleTheme}
                 thumbIcon={({ className }) =>
-                  resolvedTheme === 'dark' ? (
+                  themeStore === DARK ? (
                     <IoSunnyOutline className={className} />
                   ) : (
                     <IoMoonSharp className={className} />
@@ -87,8 +96,8 @@ export default function NavbarComponent() {
                 }
               ></Switch>
             </DropdownItem>
-            <DropdownItem key="logout" color="danger">
-              Log Out
+            <DropdownItem key="logout" color="primary" value="logout">
+              Cerrar sesión
             </DropdownItem>
           </DropdownMenu>
         </Dropdown>

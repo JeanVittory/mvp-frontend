@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useTheme } from 'next-themes';
 import { FiMoon, FiSun } from 'react-icons/fi';
+import { DARK, LIGHT } from '@/constants';
 
 export default function ThemeSwitchModeIcon() {
   const [mounted, setMounted] = useState(false);
@@ -14,10 +15,10 @@ export default function ThemeSwitchModeIcon() {
     return null;
   }
   if (resolvedTheme === 'dark') {
-    return <FiSun onClick={() => setTheme('light')} />;
+    return <FiSun onClick={() => setTheme(LIGHT)} />;
   }
 
   if (resolvedTheme === 'light') {
-    return <FiMoon onClick={() => setTheme('dark')} />;
+    return <FiMoon onClick={() => setTheme(DARK)} />;
   }
 }
