@@ -2,7 +2,6 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { DarkModeProvider } from './darkModeProvider';
 import { Toaster } from 'sonner';
-import NavbarComponent from '@/components/navbar/navbar';
 import { NextUIProvider } from '@nextui-org/system';
 
 export const metadata: Metadata = {
@@ -16,8 +15,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className="transition duration-300 flex flex-col min-h-screen max-w-screen-xl mx-auto bg-light-100 text-dark-100 dark:bg-dark-100 dark:text-light-100">
+    <html lang="en" suppressHydrationWarning className=''>
+      <body className="transition duration-300 flex flex-col min-h-screen max-w-screen mx-auto bg-light-100 text-dark-100 dark:bg-dark-100 dark:text-light-100">
         <NextUIProvider>
           <DarkModeProvider>
             {children}

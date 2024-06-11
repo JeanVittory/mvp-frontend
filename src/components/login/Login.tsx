@@ -1,17 +1,20 @@
 'use client';
 
-import { urbanist } from '@/utils/fonts';
+import { useRouter } from 'next/navigation';
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { IoMdArrowRoundForward } from 'react-icons/io';
 import { VscEye, VscEyeClosed } from 'react-icons/vsc';
-import { authValidator } from '@/utils/validators/auth/joi';
-import { IAuthentication, IAuthenticationErrors } from '@/interfaces/auth';
-import { authenticate } from './services';
-import { SERVER_ERROR_CODE, UNAUTORIZED_CODE } from '@/constants';
 import { ClipLoader } from 'react-spinners';
+import { jwtDecode } from 'jwt-decode';
+import { urbanist } from '@/utils/fonts';
+import { authValidator } from '@/utils/validators/auth/joi';
+import { IAuthentication, IAuthenticationErrors, IJwtPayloadDecoded } from '@/interfaces/auth';
+import { authenticate } from './services';
+import { OK, SERVER_ERROR_CODE, UNAUTORIZED_CODE } from '@/constants';
 import { showServerErrorToast, showUnauthorizedToast } from '@/utils/toasts';
 
 export default function LoginForm() {
+
   const [credentials, setCredentials] = useState<IAuthentication>({
     email: '',
     password: '',
@@ -25,6 +28,8 @@ export default function LoginForm() {
   const [isloading, setIsLoading] = useState<boolean>(false);
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
+
+  const router = useRouter()
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
@@ -49,11 +54,23 @@ export default function LoginForm() {
     resetCredentialsState();
     resetErrorState();
     setIsLoading(true);
-    const result = await authenticate(credentials);
+    try {
+      const {data, status} = await authenticate(credentials);
+      if(status === OK) {
+        setUserDataIntoStore(data.ACCESS_TOKEN);
+        router.push("dashboard");
+      }
+    } catch (error:any) {
+      if (error.code === SERVER_ERROR_CODE) showServerErrorToast();
+      if (error.response.status === UNAUTORIZED_CODE) showUnauthorizedToast();
+    }
     setIsLoading(false);
-    if (result.code === SERVER_ERROR_CODE) showServerErrorToast();
-    if (result.status === UNAUTORIZED_CODE) showUnauthorizedToast();
   };
+
+  const setUserDataIntoStore = (ACCESS_TOKEN:string) => {
+    const { payload } = jwtDecode<IJwtPayloadDecoded>(ACCESS_TOKEN);
+  
+  }
 
   const resetErrorState = (): void => {
     setError({

@@ -13,3 +13,8 @@ export const SERVER_ERROR_MESSAGE = 'Error en el servidor. Intente más tarde.';
 
 export const DARK = 'dark';
 export const LIGHT = 'light';
+
+
+export const OK = 200;
+export const CREATED = 201;
+export const OK_WITH_NO_RESPONSE = 204;

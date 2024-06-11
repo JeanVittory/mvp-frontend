@@ -9,6 +9,19 @@ export interface IAuthenticationErrors {
 }
 
 export interface IJwtPayload {
-  ACCESS_TOKEN: string;
-  REFRESH_TOKEN: string;
+  status: number;
+  data: {
+    ACCESS_TOKEN: string
+  };
+}
+
+export interface IJwtPayloadDecoded {
+  payload: {
+    userEmail: string;
+    userName: string;
+    sessionId: string;
+    userId: string;
+  };
+  iat: number; // Tiempo en el que se emitió el token (en segundos)
+  exp: number; // Tiempo en el que expira el token (en segundos)
 }

@@ -5,15 +5,15 @@ import { AUTHENTICATE } from '@/constants';
 
 export const authenticate = async (
   credentials: IAuthentication
-): Promise<IJwtPayload | any> => {
+): Promise<IJwtPayload> => {
   try {
-    const { data, status } = await axios.post(
+    const { status, data } = await axios.post(
       `${ROOT_URL}${AUTHENTICATE}`,
-      credentials
+      credentials,
+      { withCredentials: true }
     );
-    console.log(data);
-    return data;
+    return { status, data };
   } catch (error: any) {
-    return error;
+    throw error;
   }
 };
